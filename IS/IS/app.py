@@ -1,12 +1,29 @@
+import os
 import streamlit as st
 import joblib
 import numpy as np
 
-# โหลดโมเดล
-model = joblib.load('dog_breed_model.pkl')
+# หาพาธของโฟลเดอร์ที่ไฟล์ `app.py` อยู่
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# โหลด LabelEncoders จากไฟล์เดียว
-label_encoders = joblib.load('label_encoders.pkl')
+# กำหนดพาธของไฟล์โมเดลและ encoders
+MODEL_PATH = os.path.join(BASE_DIR, "dog_breed_model.pkl")
+ENCODER_PATH = os.path.join(BASE_DIR, "label_encoders.pkl")
+
+# ตรวจสอบว่าไฟล์โมเดลมีอยู่จริง
+if not os.path.exists(MODEL_PATH):
+    st.error(f"❌ Model file not found: {MODEL_PATH}")
+    st.stop()
+
+if not os.path.exists(ENCODER_PATH):
+    st.error(f"❌ Encoder file not found: {ENCODER_PATH}")
+    st.stop()
+
+# โหลดโมเดล
+model = joblib.load(MODEL_PATH)
+
+# โหลด LabelEncoders
+label_encoders = joblib.load(ENCODER_PATH)
 label_encoder_breed = label_encoders['breed']
 label_encoder_traits = label_encoders['traits']
 
